@@ -1,4 +1,4 @@
-import { object, string } from 'joi';
+const { object, string } = require('joi');
 
 
 //#region Register validation
@@ -40,4 +40,4 @@ const loginValidation = (data) => {
 
 //#endregion
 
-export { registerValidation, loginValidation };
+module.exports = { registerValidation, loginValidation };

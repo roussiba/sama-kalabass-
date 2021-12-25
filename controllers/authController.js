@@ -1,11 +1,9 @@
-const router = require('express').Router();
-import { loginValidation, registerValidation } from '../../service/Users/validation';
-import User, { findOne } from '../model/User';
-import { cryptPassword, validPass } from '../service/password';
+const { loginValidation, registerValidation } = require('../service/user/validation');
+const User = require('../model/user');
+const { cryptPassword, validPass } = require('../service/user/password');
 
-router.post('/register', async (req, res) => {
+const register = async (req, res) => {
     try {
-
         const { error } = registerValidation(req.body);
         if(error)
             res.status(400).send(error.details);
@@ -30,11 +28,9 @@ router.post('/register', async (req, res) => {
     } catch (error) {
         res.status(400).send(error);
     }
- });
+};
 
-
-router.post('/login',  async (req, res) => {
-
+const login = async (req, res) => {
     try {
 
         const { error } = loginValidation(req.body);
@@ -55,6 +51,7 @@ router.post('/login',  async (req, res) => {
         res.status(400).send(error);
     }
 
-});
- 
-export default router;
+};
+
+module.exports = {register, login};
+  

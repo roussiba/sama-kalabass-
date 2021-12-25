@@ -1,4 +1,4 @@
-import { genSalt, hash, compare } from 'bcryptjs';
+const { genSalt, hash, compare } = require('bcryptjs');
 
 const cryptPassword = async (password) => {
     const salt = await genSalt(10)
@@ -9,4 +9,4 @@ const validPass = async (password, data) => {
     return await compare(password, data);
 }
 
-export {  cryptPassword, validPass };
+module.exports = { cryptPassword, validPass };
