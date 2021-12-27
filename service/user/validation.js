@@ -1,18 +1,18 @@
-const { object, string } = require('joi');
+const Joi = require('joi');
 
 
 //#region Register validation
 
 const registerValidation = (data) => {
-    const schemaRegister =  object({
-        name: string()
+    const schemaRegister =  Joi.object({
+        name: Joi.string()
             .min(6)
             .required(),
-        email: string()
+        email: Joi.string()
             .min(6)
             .required()
             .email(),
-        password: string()
+        password: Joi.string()
             .min(6)
             .required()
             .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
@@ -25,12 +25,12 @@ const registerValidation = (data) => {
 //#region Login validation
 
 const loginValidation = (data) => {
-    const schemaLogin =  object({
-        email: string()
+    const schemaLogin = Joi.object({
+        email: Joi.string()
             .min(6)
             .required()
             .email(),
-        password: string()
+        password: Joi.string()
             .min(6)
             .required()
             .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))

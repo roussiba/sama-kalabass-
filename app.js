@@ -1,4 +1,5 @@
 const express = require('express');
+var bodyParser = require('body-parser')
 require('dotenv/config');
 
 // Variable
@@ -11,6 +12,8 @@ const connectDB = require('./db/connect');
 const authRoutes = require('./route/user/authRoute');
 
 app.use(express.json());
+
+app.use(bodyParser.json({ type: 'application/*+json' }))
 
 //Middleware
 const notFoundMiddleware = require('./middleware/not-found');

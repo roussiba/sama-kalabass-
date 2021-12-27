@@ -32,7 +32,6 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-
         const { error } = loginValidation(req.body);
         if(error) 
             return res.status(400).send(error.details);
