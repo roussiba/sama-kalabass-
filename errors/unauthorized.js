@@ -8,4 +8,4 @@ class UnauthorizedError extends CustomAPIError {
   }
 }
 
-export default UnauthorizedError;
+module.exports = UnauthorizedError;

@@ -8,4 +8,4 @@ class NotFoundError extends CustomAPIError {
   }
 }
 
-export default NotFoundError;
+module.exports = NotFoundError;

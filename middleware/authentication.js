@@ -1,19 +1,34 @@
-import { UnauthenticatedError } from '../errors';
-import { isTokenValid } from '../utils';
+const CustomError = require('../errors');
+const { isTokenValid } = require('../utils');
 
+const authenticateUser = async (req, res, next) => {
+  const token = req.signedCookies.token;
 
-const authentificateUser = async (req, res, next) =>{
-    const token = req.signedCookies.token;
+  if (!token) {
+    throw new CustomError.UnauthenticatedError('Authentication Invalid');
+  }
 
-    if (!token) {
-        throw new UnauthenticatedError('Authentication Invalid');
+  try {
+    const { name, userId, role } = isTokenValid({ token });
+    req.user = { name, userId, role };
+    next();
+  } catch (error) {
+    throw new CustomError.UnauthenticatedError('Authentication Invalid');
+  }
+};
+
+const authorizePermissions = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      throw new CustomError.UnauthorizedError(
+        'Unauthorized to access this route'
+      );
     }
+    next();
+  };
+};
 
-    try {
-        const { name, userId, role } = isTokenValid({ token });
-        req.user = { name, userId, role };
-        next();
-    } catch (error) {
-        throw new UnauthenticatedError('Authentication Invalid');
-    }
-}
+module.exports = {
+  authenticateUser,
+  authorizePermissions,
+};

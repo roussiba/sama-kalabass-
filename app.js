@@ -1,7 +1,7 @@
-const express = require('express');
-var bodyParser = require('body-parser')
 require('dotenv/config');
-
+const express = require('express');
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser');
 // Variable
 const app = express();
 
@@ -14,6 +14,8 @@ const authRoutes = require('./route/user/authRoute');
 app.use(express.json());
 
 app.use(bodyParser.json({ type: 'application/*+json' }))
+
+app.use(cookieParser('MY SECRET'));
 
 //Middleware
 const notFoundMiddleware = require('./middleware/not-found');
