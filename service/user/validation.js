@@ -5,13 +5,17 @@ const Joi = require('joi');
 
 const registerValidation = (data) => {
     const schemaRegister =  Joi.object({
-        name: Joi.string()
-            .min(6)
-            .required(),
+        nom: Joi.string()
+            .min(6),
+        prennom: Joi.string()
+            .min(6),
         email: Joi.string()
             .min(6)
-            .required()
             .email(),
+        phone: Joi.string()
+            .min(6),
+        login: Joi.string()
+            .required(),
         password: Joi.string()
             .min(6)
             .required()
@@ -26,10 +30,9 @@ const registerValidation = (data) => {
 
 const loginValidation = (data) => {
     const schemaLogin = Joi.object({
-        email: Joi.string()
+        login: Joi.string()
             .min(6)
-            .required()
-            .email(),
+            .required(),
         password: Joi.string()
             .min(6)
             .required()

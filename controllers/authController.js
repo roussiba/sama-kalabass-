@@ -1,9 +1,9 @@
 const { loginValidation, registerValidation } = require('../service/user/validation');
-const { cryptPassword, validPass } = require('../service/user/password');
+const { validPass } = require('../service/user/password');
 const { attachCookiesToResponse, createTokenUser, createJWT } = require('../utils');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
-const User = require('../model/user');
+const GenericRepository = require('../Repository/GenericRepository');
 
 const register = async (req, res) => {
     try {
@@ -12,20 +12,14 @@ const register = async (req, res) => {
         if(error)
             res.status(400).send(error.details);
 
-        const emailExist = await User.findOne({ email: req.body.email });
+        const emailExist = await GenericRepository.repository_user.model.findOne({ login: req.body.login });
 
         //Check if the user is already in the database
         if(emailExist)
             throw new CustomError.BadRequestError('Email already exists');
-        
-        //Hash password
-        const passwordHash = await cryptPassword(req.body.password);
 
-        const user = await new User({
-                        name : req.body.name,
-                        email : req.body.email,
-                        password : passwordHash
-                    }).save();
+        const user   = await new GenericRepository.repository_user.create_model(req.body);
+        const compte = await new GenericRepository.repository_compte.create_model(req.body);
 
         //Create a new user
         /*res.send(user);*/
@@ -44,25 +38,24 @@ const login = async (req, res) => {
     try {
         const { error } = loginValidation(req.body);
         if(error) 
-            return res.status(400).send(error.details);
+            res.status(400).json(error.details);
 
-        const user = await User.findOne({ email: req.body.email });
+        const user = await GenericRepository.repository_user.model.findOne({ email: req.body.email });
         if(!user)
-            return res.status(400).send("Email is not found");
+            res.status(400).json("Email is not found");
 
         const getValidPass = await validPass(req.body.password, user.password);
         if(!getValidPass)
-            return res.status(400).send("Password invalid !");
+            res.status(400).json("Password invalid !");
 
         const tokenUser = createTokenUser(user);
         const tokenJwt = createJWT({payload: tokenUser});
 
         attachCookiesToResponse({ res, user: tokenUser, token: tokenJwt });
-          
         res.status(StatusCodes.OK).json({ user: tokenUser , token: tokenJwt });
 
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).json(error);
     }
 
 };
